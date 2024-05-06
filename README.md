@@ -1,1 +1,3 @@
 # 3380project
+
+This python code has 3 function within it. The first is the by stock function, which essentially buys however many shares of 1 stock the user wants to buy and stores it based on the investor ID passed thru. There are a total of 7 stocks ( NVDA, AAPL, TSLA, MSFT, META, AMZN, GOOGL). The second function is store stock in portfolio. this stores the stock under the investor ID in what portfolio they want it in, as investors can have multiple portfolios based on the portfolio ID passed thru. the third is view the stock shares. this allows the user to view their total stock shares total throughout each portfolio. 
