@@ -54,38 +54,37 @@ def buy_stock(investor_id, stock_symbol, quantity):
         print(f"Error: {err}")
 
 
-def store_stock_in_portfolio(inv_id, port_id, symbol, shares, price):
+def get_transaction_info(transaction_id):
     try:
+        # Create a cursor
         cursor = db_connection.cursor()
 
-        # Calculate the total investment
-        total_investment = shares * price
+        # Query to retrieve transaction information
+        query = "SELECT trans_id, quantity, InvID, StockSymbol FROM transaction WHERE trans_id = %s"
+        cursor.execute(query, (transaction_id,))
+        
+        # Fetch the transaction information
+        transaction_info = cursor.fetchone()
 
-        # Check if the stock already exists in the portfolio
-        query = "SELECT * FROM portfolio WHERE inv_ID = %s AND ID = %s AND stock_symbol = %s"
-        cursor.execute(query, (inv_id, port_id, symbol))
-        result = cursor.fetchone()
+        if transaction_info:
+            # Process the transaction information (e.g., print or return)
+            print("Transaction ID:", transaction_info[0])
+            print("Quantity:", transaction_info[1])
+            print("Investor ID:", transaction_info[2])
+            print("Stock Symbol:", transaction_info[3])
 
-        if result:
-            # Update the existing record
-            update_query = "UPDATE portfolio SET shares = shares + %s, totalinvestments = totalinvestments + %s WHERE inv_ID = %s AND ID = %s AND stock_symbol = %s"
-            cursor.execute(update_query, (shares, total_investment, inv_id, port_id, symbol))
-            print("Stock successfully added to portfolio.")
         else:
-            # Insert a new record
-            insert_query = "INSERT INTO portfolio (inv_ID, ID, stock_symbol, shares, totalinvestments) VALUES (%s, %s, %s, %s, %s)"
-            insert_values = (inv_id, port_id, symbol, shares, total_investment)
-            cursor.execute(insert_query, insert_values)
-            print("Stock successfully added to portfolio.")
+            print("Transaction not found.")
 
-        db_connection.commit()
     except mysql.connector.Error as err:
-        print("Error:", err)
+        print(f"Error: {err}")
+
     finally:
+        # Close cursor (assuming db_connection is defined globally)
         cursor.close()
 
-
-
+# Example usage
+get_transaction_info(33)
 buy_stock(3, 'META', 193)
 view_stock_shares(1, 3)
-store_stock_in_portfolio(3,5,'META',10,150)
+
